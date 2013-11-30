@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>IngestConfiguration.instance</name>
+    <value>value</value>
+  </property>
+  <property>
+    <name>IngestConfiguration.zookeepers</name>
+    <value>value</value>
+  </property>
+  <property>
+    <name>IngestConfiguration.username</name>
+    <value>value</value>
+  </property>
+  <property>
+    <name>IngestConfiguration.password</name>
+    <value>value</value>
+  </property>
+  <property>
+    <name>IngestConfiguration.tableName</name>
+    <value>enron</value>
+  </property>
+  <property>
+    <name>IngestConfiguration.indexTableName</name>
+    <value>enronIndex</value>
+  </property>
+  <property>
+    <name>IngestConfiguration.numPartitions</name>
+    <value>10</value>
+  </property>
+</configuration>

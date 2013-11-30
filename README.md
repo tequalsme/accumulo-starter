@@ -1,5 +1,5 @@
-accumulo-enron
-==============
+accumulo-starter
+================
 
 A sample application that illustrates using Apache Accumulo to ingest and query the Enron Email Dataset.
 

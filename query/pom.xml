@@ -3,9 +3,45 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.timreardon</groupId>
-        <artifactId>accumenron</artifactId>
+        <artifactId>accumulo-starter</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>accumenron-query</artifactId>
-    <dependencies />
+    <artifactId>accumulo-starter-query</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.timreardon</groupId>
+            <artifactId>accumulo-starter-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.accumulo</groupId>
+            <artifactId>accumulo-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jline</groupId>
+                    <artifactId>jline</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-jci-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-jci-fam</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
