@@ -62,29 +62,17 @@ public class IngestJob extends Configured implements Tool {
         Path[] inputPathsArray = new Path[inputPaths.size()];
         inputPaths.toArray(inputPathsArray);
         
-        String s = inputPathsArray[0].toString();
-        int i = s.indexOf("maildir/");
-//        int i2 = s.indexOf('/', i+8);
-//        String mailbox = s.substring(i+8, i2);
-//        String folder = s.substring(i2+1);
-        System.out.println("path: " + s);
-        String[] folderTokens = s.substring(i+8).split("/");
-        System.out.println("mailbox: " + folderTokens[0]);
-        System.out.println("folder: " + folderTokens[1]);
-        System.out.println("file: " + folderTokens[folderTokens.length-1]);
-        
-//        FileInputFormat.setInputPaths(job, inputPathsArray);
-//
-//        job.setMapperClass(IngestMapper.class);
-//        job.setMapOutputKeyClass(Text.class);
-//        job.setMapOutputValueClass(Mutation.class);
-//        job.setNumReduceTasks(0);
-//        job.setOutputFormatClass(AccumuloOutputFormat.class);
-//        AccumuloOutputFormat.setZooKeeperInstance(conf, instanceName, zookeepers);
-//        AccumuloOutputFormat.setOutputInfo(conf, user, password, true, tableName);
-//
-//        return job.waitForCompletion(true) ? 0 : 1;
-        return 0;
+        FileInputFormat.setInputPaths(job, inputPathsArray);
+
+        job.setMapperClass(IngestMapper.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Mutation.class);
+        job.setNumReduceTasks(0);
+        job.setOutputFormatClass(AccumuloOutputFormat.class);
+        AccumuloOutputFormat.setZooKeeperInstance(conf, instanceName, zookeepers);
+        AccumuloOutputFormat.setOutputInfo(conf, user, password, true, tableName);
+
+        return job.waitForCompletion(true) ? 0 : 1;
     }
     
     /**

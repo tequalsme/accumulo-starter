@@ -9,7 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
-import com.timreardon.accumulo.starter.ingest.parser.Message;
+import com.timreardon.accumulo.starter.common.domain.Message;
 import com.timreardon.accumulo.starter.ingest.parser.MessageParser;
 
 public class MessageParserTest {

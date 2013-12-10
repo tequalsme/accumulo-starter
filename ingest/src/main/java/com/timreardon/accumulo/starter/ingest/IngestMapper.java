@@ -17,7 +17,7 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import com.timreardon.accumulo.starter.ingest.parser.Message;
+import com.timreardon.accumulo.starter.common.domain.Message;
 import com.timreardon.accumulo.starter.ingest.parser.MessageParser;
 
 public class IngestMapper extends Mapper<Text, BytesWritable, Text, Mutation> {
@@ -39,7 +39,6 @@ public class IngestMapper extends Mapper<Text, BytesWritable, Text, Mutation> {
     @Override
     protected void map(Text key, BytesWritable value, Context context) throws IOException, InterruptedException {
         Message message = parser.parse(value.getBytes(), key.toString());
-//        fillFields(message, fieldMap);
 
         /*
          * enron table:
@@ -59,8 +58,8 @@ public class IngestMapper extends Mapper<Text, BytesWritable, Text, Mutation> {
 //            indexMutation.put(entry.getKey(), message.getId(), visibility, message.getTimestamp(), EMPTY_VALUE);
 //            context.write(indexTableName, indexMutation);
 //        }
-        writeField(context, mutation, message, "ID", message.getId(), false);
-        writeField(context, mutation, message, "TIMESTAMP", Long.toString(message.getTimestamp()), false);
+//        writeField(context, mutation, message, "ID", message.getId(), false);
+//        writeField(context, mutation, message, "TIMESTAMP", Long.toString(message.getTimestamp()), false);
         writeField(context, mutation, message, "FROM", message.getFrom(), true);
         writeField(context, mutation, message, "TO", message.getToAsString(), true);
         writeField(context, mutation, message, "CC", message.getCcAsString(), true);
@@ -93,21 +92,4 @@ public class IngestMapper extends Mapper<Text, BytesWritable, Text, Mutation> {
             context.write(indexTableName, indexMutation);
         }
     }
-    
-//    void fillFields(Message m, Multimap<String, String> map) {
-//        map.put("ID", m.getId());
-//        map.put("TIMESTAMP", Long.toString(m.getTimestamp()));
-//        map.put("FROM", m.getFrom());
-//        map.put("TO", m.getToAsString());
-//        if (m.getCcAsString() != null) map.put("CC", m.getCcAsString());
-//        if (m.getBccAsString() != null) map.put("BCC", m.getBccAsString());
-//        map.put("SUBJECT", m.getSubject());
-//        map.put("MAILBOX", m.getMailbox());
-//        map.put("FOLDER", m.getFolder());
-//        map.put("FILENAME", m.getFilename());
-////        map.putAll(m.getHeaders());
-//        for (String w : m.getBodyTokens()) {
-//            map.put("CONTENT", w);
-//        }
-//    }
 }

@@ -16,6 +16,9 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
+/**
+ * Extremely useful class courtesy of: http://hadoop-sandy.blogspot.com/2013/02/wholefileinputformat-in-java-hadoop.html
+ */
 public class WholeFileInputFormat extends FileInputFormat<Text, BytesWritable> {
     @Override
     protected boolean isSplitable(JobContext context, Path filename) {
@@ -37,12 +40,14 @@ public class WholeFileInputFormat extends FileInputFormat<Text, BytesWritable> {
         private Text key = new Text();
         private BytesWritable value = new BytesWritable();
 
+        @Override
         public void initialize(InputSplit inputSplit, TaskAttemptContext taskAttemptContext) throws IOException,
                 InterruptedException {
             this.fileSplit = (FileSplit) inputSplit;
             this.conf = taskAttemptContext.getConfiguration();
         }
 
+        @Override
         public boolean nextKeyValue() throws IOException {
             if (!processed) {
                 byte[] contents = new byte[(int) fileSplit.getLength()];

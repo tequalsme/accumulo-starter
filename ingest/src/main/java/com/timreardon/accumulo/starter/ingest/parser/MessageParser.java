@@ -1,6 +1,8 @@
 package com.timreardon.accumulo.starter.ingest.parser;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.io.IOUtils.readLines;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,14 +13,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.timreardon.accumulo.starter.common.domain.Message;
 
+/**
+ * Custom logic for parsing Enron email messages.
+ * 
+ * @author tim
+ */
 public class MessageParser {
     private static final Logger logger = LoggerFactory.getLogger(MessageParser.class);
     
@@ -36,10 +42,12 @@ public class MessageParser {
         InputStream in = new ByteArrayInputStream(bytes);
         
         @SuppressWarnings("unchecked")
-        List<String> lines = IOUtils.readLines(in);
+        List<String> lines = readLines(in);
         
         Message message = new Message();
-        //Map<String, String> headers = new HashMap<String, String>();
+        
+        parsePath(path, message);
+
         Multimap<String, String> headers = HashMultimap.create();
         Set<String> bodyTokens = new HashSet<String>();
         boolean inHeaders = true;
@@ -69,7 +77,7 @@ public class MessageParser {
                 headerLine = line.trim();
             }
             
-            if (StringUtils.isEmpty(headerLine)) {
+            if (isEmpty(headerLine)) {
                 continue;
             }
             
@@ -84,59 +92,32 @@ public class MessageParser {
             } else if (FROM.equals(headerKey)) {
                 message.setFrom(headerLine);
             } else if (TO.equals(headerKey)) {
-//                message.addTo(headerLine);
-                String[] headerValues = (headerLine.contains(",") ? headerLine.split(",") : new String[] {headerLine});
-                for (String val : headerValues) {
-                    message.addTo(val.trim());
-                }
+                message.addTo(parseHeaderLine(headerLine));
             } else if (CC.equals(headerKey)) {
-//                message.addCc(headerLine);
-                String[] headerValues = (headerLine.contains(",") ? headerLine.split(",") : new String[] {headerLine});
-                for (String val : headerValues) {
-                    message.addCc(val.trim());
-                }
+                message.addCc(parseHeaderLine(headerLine));
             } else if (BCC.equals(headerKey)) {
-//                message.addBcc(headerLine);
-                String[] headerValues = (headerLine.contains(",") ? headerLine.split(",") : new String[] {headerLine});
-                for (String val : headerValues) {
-                    message.addBcc(val.trim());
-                }
+                message.addBcc(parseHeaderLine(headerLine));
             } else if (SUBJECT.equals(headerKey)) {
                 message.setSubject(headerLine);
             } else {
-                String[] headerValues = (headerLine.contains(",") ? headerLine.split(",") : new String[] {headerLine});
+                // misc headers
+                String[] headerValues = parseHeaderLine(headerLine);
                 for (String val : headerValues) {
                     headers.put(headerKey, val.trim());
                 }
             }
-            
-//            if (inHeaders && line.contains(": ") && !line.isEmpty()) {
-//                processHeaders(line, message, headers);
-//            } else {
-//                inHeaders = false;
-//                if (line.isEmpty()) {
-//                    continue;
-//                } else {
-//                    processBody(line, words);
-//                }
-//            }
         }
         
 //        message.setHeaders(headers);
         message.setBodyTokens(bodyTokens);
         message.setRawBytes(bytes);
         
-        parsePath(path, message);
-        
         return message;
     }
     
-//    private void parseField() {
-//        String[] headerValues = (headerLine.contains(",") ? headerLine.split(",") : new String[] {headerLine});
-//        for (String val : headerValues) {
-//            headers.put(headerKey, val.trim());
-//        }
-//    }
+    private String[] parseHeaderLine(String headerLine) {
+        return (headerLine.contains(",") ? headerLine.split(",") : new String[] {headerLine});
+    }
     
     private void parsePath(String path, Message message) {
         int i = path.indexOf("maildir/");
@@ -147,37 +128,6 @@ public class MessageParser {
             message.setFileName(folderTokens[folderTokens.length-1]);
         }
     }
-
-//    private void processHeaders(String line, Message message, Map<String, String> headers) {
-////        System.out.println(line);
-//        String[] h = line.split(": ", 2);
-//        if (h.length >= 2) {
-//            if (StringUtils.isEmpty(h[1])) {
-//                return;
-//            }
-//            
-//            if (ID.equals(h[0]))
-//                message.setId(h[1]);
-//            else if (DATE.equals(h[0])) {
-//                try {
-//                    message.setTimestamp(sdf.parse(h[1]).getTime());
-//                } catch (ParseException e) {
-//                    logger.warn("Unable to parse message date", e);
-//                }
-//            } else if (FROM.equals(h[0]))
-//                message.setFrom(h[1]);
-//            else if (TO.equals(h[0]))
-//                message.setTo(h[1]);
-//            else if (CC.equals(h[0]))
-//                message.setCc(h[1]);
-//            else if (BCC.equals(h[0]))
-//                message.setBcc(h[1]);
-//            else if (SUBJECT.equals(h[0]))
-//                message.setSubject(h[1]);
-//            else
-//                headers.put(h[0], h[1]);
-//        }
-//    }
     
     private void processBody(String line, Set<String> words) {
         // lowercase, split on non-alphanumeric chars
