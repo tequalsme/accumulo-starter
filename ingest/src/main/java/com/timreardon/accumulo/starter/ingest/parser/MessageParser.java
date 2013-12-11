@@ -3,6 +3,8 @@ package com.timreardon.accumulo.starter.ingest.parser;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.IOUtils.readLines;
 import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.remove;
+import static org.apache.commons.lang.StringUtils.strip;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -82,7 +84,7 @@ public class MessageParser {
             }
             
             if (ID.equals(headerKey)) {
-                message.setId(headerLine);
+                message.setId(strip(remove(headerLine, ".JavaMail.evans@thyme"), "<>"));
             } else if (DATE.equals(headerKey)) {
                 try {
                     message.setTimestamp(sdf.parse(headerLine).getTime());
