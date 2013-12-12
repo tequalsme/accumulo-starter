@@ -43,5 +43,10 @@
             <artifactId>hadoop-core</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
