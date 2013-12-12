@@ -4,6 +4,8 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.join;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -95,6 +97,11 @@ public class Message {
 
     public String getSubject() {
         return subject;
+    }
+    
+    public Set<String> getSubjectTokens() {
+        // lowercase, split on non-alphanumeric chars
+        return new HashSet<String>(Arrays.asList(subject.toLowerCase().split("\\W+")));
     }
 
     public void setSubject(String subject) {
