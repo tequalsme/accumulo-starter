@@ -38,9 +38,11 @@ public class MessageParser {
     private static final String BCC = "Bcc";
     private static final String SUBJECT = "Subject";
     
-    SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+    static final String DATE_PATTERN = "EEE, d MMM yyyy HH:mm:ss Z";
 
     public Message parse(byte[] bytes, String path) throws IOException {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+        
         InputStream in = new ByteArrayInputStream(bytes);
         
         @SuppressWarnings("unchecked")

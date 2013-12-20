@@ -1,4 +1,4 @@
-package com.timreardon.accumulo.starter.ingest;
+package com.timreardon.accumulo.starter.ingest.mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
 

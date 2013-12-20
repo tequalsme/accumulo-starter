@@ -1,5 +1,7 @@
 package com.timreardon.accumulo.starter.common;
 
+import static org.apache.commons.lang.ArrayUtils.EMPTY_BYTE_ARRAY;
+
 import org.apache.accumulo.core.data.Value;
 import org.apache.accumulo.core.security.ColumnVisibility;
 import org.apache.hadoop.io.Text;
@@ -12,13 +14,13 @@ public final class Constants {
     
     public static final String FIELD_COLUMN_FAMILY = "f";
     public static final Text DOCUMENT_COLUMN_FAMILY = new Text("d");
-    
-    public static final String NULL_BYTE = "\u0000";
-    public static final String MAX_BYTE = "\uffff";
-    
+
+    /** "\u0000" */
+    public static final String MIN_CHAR_STRING = Character.toString(Character.MIN_VALUE);
+    /** "\uffff" */
+    public static final String MAX_CHAR_STRING = Character.toString(Character.MAX_VALUE);
+
     public static final Text EMPTY_TEXT = new Text();
-    public static final byte[] EMPTY_BYTES = new byte[0];
-    public static final Value EMPTY_VALUE = new Value(EMPTY_BYTES);
-    
+    public static final Value EMPTY_VALUE = new Value(EMPTY_BYTE_ARRAY);
     public static final ColumnVisibility EMPTY_COL_VIS = new ColumnVisibility();
 }

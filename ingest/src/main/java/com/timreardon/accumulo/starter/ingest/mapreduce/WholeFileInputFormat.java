@@ -1,4 +1,4 @@
-package com.timreardon.accumulo.starter.ingest;
+package com.timreardon.accumulo.starter.ingest.mapreduce;
 
 import java.io.IOException;
 
@@ -33,7 +33,7 @@ public class WholeFileInputFormat extends FileInputFormat<Text, BytesWritable> {
         return reader;
     }
 
-    class WholeFileRecordReader extends RecordReader<Text, BytesWritable> {
+    public class WholeFileRecordReader extends RecordReader<Text, BytesWritable> {
         private FileSplit fileSplit;
         private Configuration conf;
         private boolean processed = false;

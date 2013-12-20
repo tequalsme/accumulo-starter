@@ -1,27 +1,21 @@
-package com.timreardon.accumulo.starter.ingest;
+package com.timreardon.accumulo.starter.ingest.mapreduce;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.accumulo.core.client.AccumuloException;
-import org.apache.accumulo.core.client.AccumuloSecurityException;
-import org.apache.accumulo.core.client.Connector;
-import org.apache.accumulo.core.client.TableExistsException;
-import org.apache.accumulo.core.client.ZooKeeperInstance;
-import org.apache.accumulo.core.client.admin.TableOperations;
-import org.apache.accumulo.core.client.mapreduce.AccumuloOutputFormat;
-import org.apache.accumulo.core.data.Mutation;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+
+import com.timreardon.accumulo.starter.common.domain.Message;
 
 public class IngestJob extends Configured implements Tool {
 
@@ -37,21 +31,15 @@ public class IngestJob extends Configured implements Tool {
             return 1;
         }
         
-        Job job = new Job(getConf(), getClass().getSimpleName());
-        Configuration conf = job.getConfiguration();
+        Configuration conf = getConf();
         conf.set("mapred.map.tasks.speculative.execution", "false");
 
-        String zookeepers = IngestConfiguration.getZookeepers(conf);
         String instanceName = IngestConfiguration.getInstanceName(conf);
+        String zookeepers = IngestConfiguration.getZookeepers(conf);
         String user = IngestConfiguration.getUsername(conf);
         byte[] password = IngestConfiguration.getPassword(conf);
         String tableName = IngestConfiguration.getTableName(conf);
-        
-        Connector connector = new ZooKeeperInstance(instanceName, zookeepers).getConnector(user, password);
-        createTables(connector, conf);
-
-        job.setJarByClass(IngestJob.class);
-        job.setInputFormatClass(WholeFileInputFormat.class);
+        String indexTableName = IngestConfiguration.getIndexTableName(conf);
 
         Path inputPath = new Path(args[0]);
         FileSystem fs = FileSystem.get(conf);
@@ -61,16 +49,22 @@ public class IngestJob extends Configured implements Tool {
         System.out.println("Input files in " + inputPath + ":" + inputPaths.size());
         Path[] inputPathsArray = new Path[inputPaths.size()];
         inputPaths.toArray(inputPathsArray);
-        
-        FileInputFormat.setInputPaths(job, inputPathsArray);
+
+        Job job = new Job(conf, getClass().getSimpleName());
+        job.setJarByClass(IngestJob.class);
+        job.setInputFormatClass(WholeFileInputFormat.class);
+        job.setOutputFormatClass(MessageOutputFormat.class);
 
         job.setMapperClass(IngestMapper.class);
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Mutation.class);
+        job.setMapOutputKeyClass(NullWritable.class);
+        job.setMapOutputValueClass(Message.class);
         job.setNumReduceTasks(0);
-        job.setOutputFormatClass(AccumuloOutputFormat.class);
-        AccumuloOutputFormat.setZooKeeperInstance(conf, instanceName, zookeepers);
-        AccumuloOutputFormat.setOutputInfo(conf, user, password, true, tableName);
+        
+        FileInputFormat.setInputPaths(job, inputPathsArray);
+        
+        MessageOutputFormat.setZooKeeperInstance(conf, instanceName, zookeepers);
+        MessageOutputFormat.setOutputInfo(conf, user, password);
+        MessageOutputFormat.setTables(conf, tableName, indexTableName);
 
         return job.waitForCompletion(true) ? 0 : 1;
     }
@@ -91,22 +85,5 @@ public class IngestJob extends Configured implements Tool {
           files.add(status.getPath());
         }
       }
-    }
-    
-    private void createTables(Connector connector, Configuration conf) throws AccumuloException, AccumuloSecurityException {
-        TableOperations tops = connector.tableOperations();
-
-        try {
-            if (!tops.exists(IngestConfiguration.getTableName(conf))) {
-                tops.create(IngestConfiguration.getTableName(conf));
-            }
-
-            if (!tops.exists(IngestConfiguration.getIndexTableName(conf))) {
-                tops.create(IngestConfiguration.getIndexTableName(conf));
-            }
-        } catch (TableExistsException e) {
-            // shouldn't happen as we check for table existence prior to each create() call
-            throw new AccumuloException(e);
-        }
     }
 }

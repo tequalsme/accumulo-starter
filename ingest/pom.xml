@@ -87,6 +87,24 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <!-- create jar of test artifacts to be used elsewhere
+                         in the project (via type:test-jar, scope:test) -->
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/testsupport/**</include>
+                                <include>samples/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
