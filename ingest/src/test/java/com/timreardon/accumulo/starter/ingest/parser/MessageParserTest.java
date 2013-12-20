@@ -2,7 +2,9 @@ package com.timreardon.accumulo.starter.ingest.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -20,6 +22,8 @@ public class MessageParserTest {
 
     private MessageParser parser = new MessageParser();
     
+    SimpleDateFormat sdf = new SimpleDateFormat(MessageParser.DATE_PATTERN);
+    
     private Message parseData(String path) throws IOException {
         return parser.parse(IOUtils.toByteArray(new ClassPathResource(path).getInputStream()), path);
     }
@@ -29,7 +33,7 @@ public class MessageParserTest {
         Message m = parseData(DATA_FILE_1);
         
         assertEquals("18782981.1075855378110", m.getId());
-        assertEquals(parser.sdf.parse("Mon, 14 May 2001 16:39:00 -0700 (PDT)").getTime(), m.getTimestamp());
+        assertEquals(sdf.parse("Mon, 14 May 2001 16:39:00 -0700 (PDT)").getTime(), m.getTimestamp());
         
         assertEquals("allen-p", m.getMailbox());
         assertEquals("_sent_mail", m.getFolder());
@@ -50,7 +54,7 @@ public class MessageParserTest {
         Message m = parseData(DATA_FILE_2);
         
         assertEquals("25560432.1075843912286", m.getId());
-        assertEquals(parser.sdf.parse("Wed, 20 Dec 2000 18:02:00 -0800 (PST)").getTime(), m.getTimestamp());
+        assertEquals(sdf.parse("Wed, 20 Dec 2000 18:02:00 -0800 (PST)").getTime(), m.getTimestamp());
         
         assertEquals("mcconnell-m", m.getMailbox());
         assertEquals("all_documents", m.getFolder());
@@ -71,7 +75,7 @@ public class MessageParserTest {
         Message m = parseData(DATA_FILE_3);
         
         assertEquals("10617394.1075840149224", m.getId());
-        assertEquals(parser.sdf.parse("Wed, 6 Jun 2001 10:46:14 -0700 (PDT)").getTime(), m.getTimestamp());
+        assertEquals(sdf.parse("Wed, 6 Jun 2001 10:46:14 -0700 (PDT)").getTime(), m.getTimestamp());
         
         assertEquals("skilling-j", m.getMailbox());
         assertEquals("inbox", m.getFolder());
@@ -92,7 +96,7 @@ public class MessageParserTest {
         Message m = parseData(DATA_FILE_4);
         
         assertEquals("793183.1075852686278", m.getId());
-        assertEquals(parser.sdf.parse("Wed, 1 Aug 2001 11:26:54 -0700 (PDT)").getTime(), m.getTimestamp());
+        assertEquals(sdf.parse("Wed, 1 Aug 2001 11:26:54 -0700 (PDT)").getTime(), m.getTimestamp());
         
         assertEquals("skilling-j", m.getMailbox());
         assertEquals("inbox", m.getFolder());
@@ -113,7 +117,7 @@ public class MessageParserTest {
         Message m = parseData(DATA_FILE_5);
         
         assertEquals("10708849.1075840101852", m.getId());
-        assertEquals(parser.sdf.parse("Mon, 28 Aug 2000 08:01:00 -0700 (PDT)").getTime(), m.getTimestamp());
+        assertEquals(sdf.parse("Mon, 28 Aug 2000 08:01:00 -0700 (PDT)").getTime(), m.getTimestamp());
         
         assertEquals("skilling-j", m.getMailbox());
         assertEquals("sent", m.getFolder());
@@ -134,7 +138,7 @@ public class MessageParserTest {
         Message m = parseData(DATA_FILE_6);
         
         assertEquals("10033007.1075840046962", m.getId());
-        assertEquals(parser.sdf.parse("Thu, 29 Nov 2001 20:11:14 -0800 (PST)").getTime(), m.getTimestamp());
+        assertEquals(sdf.parse("Thu, 29 Nov 2001 20:11:14 -0800 (PST)").getTime(), m.getTimestamp());
         
         assertEquals("slinger-r", m.getMailbox());
         assertEquals("inbox", m.getFolder());
