@@ -10,7 +10,6 @@
     </prerequisites>
     <modules>
         <module>common</module>
-        <module>iterators</module>
         <module>ingest</module>
         <module>query</module>
     </modules>
