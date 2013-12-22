@@ -48,5 +48,23 @@
             <artifactId>zookeeper</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.timreardon</groupId>
+            <artifactId>accumulo-starter-ingest</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.timreardon</groupId>
+            <artifactId>accumulo-starter-ingest</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
