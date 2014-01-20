@@ -12,6 +12,7 @@
         <module>common</module>
         <module>ingest</module>
         <module>query</module>
+        <module>query-webapp</module>
     </modules>
     <properties>
         <accumulo.version>1.4.3</accumulo.version>

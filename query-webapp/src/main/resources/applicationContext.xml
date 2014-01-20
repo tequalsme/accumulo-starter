@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- context:property-placeholder location="classpath*:app.properties" /> -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:app.properties</value>
+            </list>
+        </property>
+        <!-- defaults -->
+        <property name="properties">
+            <props>
+                <prop key="tableName">enron</prop>
+                <prop key="indexTableName">enronIndex</prop>
+            </props>
+        </property>
+    </bean>
+
+	<bean id="queryService" class="com.timreardon.accumulo.starter.query.impl.QueryServiceImpl"
+        c:connector-ref="connector"
+        c:tableName="${tableName}"
+        c:indexTableName="${indexTableName}"/>
+ 
+    <bean id="instance" class="org.apache.accumulo.core.client.ZooKeeperInstance"
+        c:instanceName="${accumulo.instance}"
+        c:zooKeepers="${accumulo.zookeepers}"/>
+    
+    <bean id="connector" factory-bean="instance" factory-method="getConnector"
+        c:user="${accumulo.username}"
+        c:pass="${accumulo.password}"/>
+        
+</beans>
