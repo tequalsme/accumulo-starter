@@ -1,8 +1,7 @@
 package com.timreardon.accumulo.starter.query.impl;
 
+import static com.google.common.collect.Iterables.size;
 import static org.junit.Assert.assertEquals;
-
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +24,14 @@ public class QueryServiceImplTest extends IngestTestSupport {
     
     @Test
     public void testQuery() {
-        List<Message> messages = service.query("forecast");
-        assertEquals(1, messages.size());
+        Iterable<Message> messages = service.query("forecast");
+        assertEquals(1, size(messages));
     }
     
     @Test
     public void testQueryNoMatch() {
-        List<Message> messages = service.query("blah");
-        assertEquals(0, messages.size());
+        Iterable<Message> messages = service.query("blah");
+        assertEquals(0, size(messages));
     }
     
     @Test(expected=IllegalArgumentException.class)

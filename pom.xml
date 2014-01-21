@@ -24,6 +24,7 @@
         <jdk.version>1.6</jdk.version>
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.13</log4j.version>
+        <mango.version>1.0.3-SNAPSHOT</mango.version>
         <mockito.version>1.9.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -88,6 +89,11 @@
                 <groupId>org.apache.zookeeper</groupId>
                 <artifactId>zookeeper</artifactId>
                 <version>${zookeeper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.calrissian.mango</groupId>
+                <artifactId>mango-core</artifactId>
+                <version>${mango.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>

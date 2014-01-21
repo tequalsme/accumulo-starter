@@ -1,6 +1,7 @@
 package com.timreardon.accumulo.starter.web.controller;
 
-import java.util.List;
+import static com.google.common.collect.Iterables.limit;
+import static org.calrissian.mango.collect.Iterables2.simpleIterable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import com.timreardon.accumulo.starter.query.QueryService;
 
 @Controller
 public class QueryController {
-
     private static final Logger logger = LoggerFactory.getLogger(QueryController.class);
 
     @Autowired
@@ -24,8 +24,9 @@ public class QueryController {
 
     @RequestMapping(value = "/query", method = RequestMethod.GET)
     @ResponseBody
-    public List<Message> query(@RequestParam String term) {
+    public Iterable<Message> query(@RequestParam String term,
+            @RequestParam(required = false, defaultValue = "500") int limit) {
 		logger.debug("query: term=" + term);
-        return queryService.query(term);
+        return simpleIterable(limit(queryService.query(term), limit));
     }
 }
