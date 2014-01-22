@@ -24,8 +24,4 @@
     <name>IngestConfiguration.indexTableName</name>
     <value>enronIndex</value>
   </property>
-  <property>
-    <name>IngestConfiguration.numPartitions</name>
-    <value>10</value>
-  </property>
 </configuration>
